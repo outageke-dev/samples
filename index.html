@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0c0e13">
+  <title>OutageKE | Amp Solar Ad Sample</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body, iframe { width:100%; height:100%; margin:0; border:0; display:block; }
+    body { overflow:hidden; background:#0c0e13; }
+  </style>
+</head>
+<body>
+  <iframe
+    id="outagekePreview"
+    src="https://outageke.co.ke/?ad_preview=1"
+    title="OutageKE homepage with Amp Solar sponsored ad preview"
+    allow="clipboard-write"
+  ></iframe>
+
+  <script>
+    (() => {
+      const frame = document.getElementById("outagekePreview");
+      const siteOrigin = "https://outageke.co.ke";
+      const imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlopn15pfZJ63sTQXrzBmnhy1S7nYFXdTSc8mHW-FjnQ&s=10";
+      const landingUrl = "https://ampsolar.co.ke/?utm_source=outageke&utm_medium=display&utm_campaign=amp_solar_sample";
+
+      // The OutageKE site supports OUTAGEKE_PREVIEW_UPDATE for direct ad previews.
+      // Send the creative through that bridge instead of accessing a cross-origin DOM.
+      const htmlContent = `<!doctype html>
+        <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+        <style>
+          *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0}body{font-family:Arial,Helvetica,sans-serif}
+          .amp-ad{height:180px;width:100%;display:grid;grid-template-columns:38% 62%;overflow:hidden;background:#101914;color:#f3f6f1;text-decoration:none}
+          .amp-image{width:100%;height:180px;display:block;object-fit:contain;padding:15px;background:#f4f6f0}
+          .amp-copy{min-width:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:7px;padding:13px 22px}
+          .amp-name{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#a9dc72}
+          h1{margin:0;font-size:clamp(17px,2.1vw,25px);line-height:1.1;letter-spacing:-.025em}
+          p{margin:0;color:#c0c9be;font-size:12px;line-height:1.35}
+          .amp-cta{display:inline-block;margin-top:2px;padding:8px 11px;border-radius:5px;background:#a9dc72;color:#162616;font-size:11px;font-weight:700}
+          @media(max-width:520px){.amp-ad{grid-template-columns:34% 66%}.amp-image{height:180px;padding:8px}.amp-copy{gap:6px;padding:10px}.amp-name{font-size:8px}h1{font-size:16px}p{font-size:10px}.amp-cta{padding:7px 8px;font-size:10px}}
+        </style></head><body>
+          <a class="amp-ad" href="${landingUrl}" target="_blank" rel="sponsored noopener noreferrer">
+            <img class="amp-image" src="${imageUrl}" alt="Amp Solar Solutions solar campaign">
+            <div class="amp-copy"><span class="amp-name">Amp Solar Solutions</span><h1>Power through outages with solar backup.</h1><p>Solar and battery systems for homes and businesses across Kenya.</p><span class="amp-cta">Get a free solar assessment →</span></div>
+          </a>
+        </body></html>`;
+
+      const sendPreview = () => {
+        if (!frame.contentWindow) return;
+        frame.contentWindow.postMessage({
+          type: "OUTAGEKE_PREVIEW_UPDATE",
+          draft: {
+            advertiser_name: "Amp Solar Solutions",
+            headline: "Power through outages with solar backup.",
+            description: "Solar and battery systems for homes and businesses across Kenya.",
+            cta_text: "Get a free solar assessment",
+            creative_type: "html5",
+            html_content: htmlContent,
+            placement_slug: "header_top"
+          }
+        }, siteOrigin);
+      };
+
+      frame.addEventListener("load", sendPreview);
+      window.addEventListener("message", (event) => {
+        if (event.origin === siteOrigin && event.data?.type === "OUTAGEKE_PREVIEW_READY") sendPreview();
+      });
+    })();
+  </script>
+</body>
+</html>
