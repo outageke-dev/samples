@@ -14,7 +14,7 @@
 <body>
   <iframe
     id="outagekePreview"
-    src="https://outageke.co.ke/?ad_preview=1"
+    src="https://outageke.co.ke/#sample_ads=amp_solar"
     title="OutageKE homepage with Amp Solar sponsored ad preview"
     allow="clipboard-write"
   ></iframe>
@@ -26,8 +26,7 @@
       const imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlopn15pfZJ63sTQXrzBmnhy1S7nYFXdTSc8mHW-FjnQ&s=10";
       const landingUrl = "https://ampsolar.co.ke/?utm_source=outageke&utm_medium=display&utm_campaign=amp_solar_sample";
 
-      // The OutageKE site supports OUTAGEKE_PREVIEW_UPDATE for direct ad previews.
-      // Send the creative through that bridge instead of accessing a cross-origin DOM.
+      // Send the sample creative through OutageKE's preview bridge; the iframe stays cross-origin.
       const htmlContent = `<!doctype html>
         <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
         <style>
@@ -50,12 +49,15 @@
       const sendPreview = () => {
         if (!frame.contentWindow) return;
         frame.contentWindow.postMessage({
-          type: "OUTAGEKE_PREVIEW_UPDATE",
+          type: "OUTAGEKE_SAMPLE_ADS_PREVIEW",
+          placements: ["header_top", "in_feed", "community_chat"],
           draft: {
             advertiser_name: "Amp Solar Solutions",
             headline: "Power through outages with solar backup.",
             description: "Solar and battery systems for homes and businesses across Kenya.",
             cta_text: "Get a free solar assessment",
+            image_url: imageUrl,
+            destination_url: landingUrl,
             creative_type: "html5",
             html_content: htmlContent,
             placement_slug: "header_top"
